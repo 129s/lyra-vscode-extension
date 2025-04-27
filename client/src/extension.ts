@@ -17,15 +17,20 @@ interface Block {
 export function activate(context: vscode.ExtensionContext) {
     // 创建装饰器类型
     const clipDecorationType = vscode.window.createTextEditorDecorationType({
-        backgroundColor: 'rgba(255,0,0,0.3)', // 默认透明度
+        backgroundColor: 'rgba(255,200,200,0.08)',
+        border: '1px solid rgba(255,100,100,0.15)',
         borderRadius: '2px',
     });
+
     const arrayDecorationType = vscode.window.createTextEditorDecorationType({
-        backgroundColor: 'rgba(0,0,255,0.3)',
+        backgroundColor: 'rgba(200,200,255,0.08)',
+        border: '1px solid rgba(100,100,255,0.15)',
         borderRadius: '2px',
     });
+
     const groupDecorationType = vscode.window.createTextEditorDecorationType({
-        backgroundColor: 'rgba(0,255,0,0.3)',
+        backgroundColor: 'rgba(200,255,200,0.08)',
+        border: '1px solid rgba(100,255,100,0.15)',
         borderRadius: '2px',
     });
 
@@ -45,18 +50,17 @@ export function activate(context: vscode.ExtensionContext) {
                 const position = new vscode.Position(lineIdx, match.index);
 
                 if (open) {
-                    // 推入栈
-                    const blockType = open as BlockType;
                     stack.push({
-                        type: blockType,
+                        type: open as BlockType,
                         start: position,
                         depth: stack.length + 1,
                     });
                 } else if (close) {
-                    // 弹出栈
                     const lastBlock = stack.pop();
                     if (lastBlock) {
-                        lastBlock.end = position;
+                        // 扩展结束位置到行尾
+                        const endLine = document.lineAt(lineIdx);
+                        lastBlock.end = endLine.range.end;
                         blocks.push(lastBlock);
                     }
                 }
@@ -65,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         return blocks;
     }
+
 
     // 更新装饰器
     function updateDecorations(editor: vscode.TextEditor) {
@@ -76,8 +81,12 @@ export function activate(context: vscode.ExtensionContext) {
         blocks.forEach(block => {
             if (!block.end) return;
 
-            const range = new vscode.Range(block.start, block.end);
-            const alpha = 0.3 - block.depth * 0.03;
+            // 更新装饰器范围生成逻辑
+            const start = block.start.with(undefined, 0); // 行首
+            const end = block.end ?
+                block.end.with(block.end.line, editor.document.lineAt(block.end.line).text.length) :
+                start;
+            const range = new vscode.Range(start, end);
 
             switch (block.type) {
                 case BlockType.Curly:

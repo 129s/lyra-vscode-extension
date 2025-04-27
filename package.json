@@ -3,7 +3,7 @@
   "displayName": "Lyra Language Support",
   "description": "Structured Music Mark Language",
   "version": "0.0.1",
-  "main": "./out/src/extension.js",
+  "main": "./out/client/src/extension.js",
   "engines": {
     "vscode": "^1.99.0"
   },
