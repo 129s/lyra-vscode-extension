@@ -11,6 +11,37 @@
     "Programming Languages"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "lyra.toggleBlocks",
+        "title": "Toggle Block Display"
+      },
+      {
+        "command": "lyra.playCurrentBlock",
+        "title": "Play Current Block"
+      },
+      {
+        "command": "lyra.playGlobal",
+        "title": "Play Global"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "lyra.toggleBlocks",
+        "key": "F4",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "lyra.playCurrentBlock",
+        "key": "F5",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "lyra.playGlobal",
+        "key": "F6",
+        "when": "editorTextFocus"
+      }
+    ],
     "languages": [
       {
         "id": "lyra",
