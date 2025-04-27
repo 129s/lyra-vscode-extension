@@ -1,0 +1,48 @@
+{
+  "name": "lyra-extension",
+  "displayName": "Lyra Language Support",
+  "description": "Structured Music Mark Language",
+  "version": "0.0.1",
+  "main": "./out/extension.js",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "lyra",
+        "aliases": [
+          "Lyra",
+          "lyra"
+        ],
+        "extensions": [
+          ".lyra"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lyra",
+        "scopeName": "source.lyra",
+        "path": "./syntaxes/lyra.tmLanguage.json"
+      }
+    ]
+  },
+  "dependencies": {
+    "antlr4ts": "^0.5.0-alpha.4",
+    "package": "^1.0.1",
+    "vsce": "^2.15.0",
+    "vscode": "^1.1.37",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  }
+}

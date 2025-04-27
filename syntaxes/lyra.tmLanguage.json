@@ -1,0 +1,134 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.lyra",
+	"name": "Lyra",
+	"patterns": [
+		{
+			"include": "#root"
+		}
+	],
+	"repository": {
+		"root": {
+			"patterns": [
+				{
+					"include": "#clipBlock"
+				},
+				{
+					"include": "#arrayBlock"
+				},
+				{
+					"include": "#groupBlock"
+				},
+				{
+					"include": "#metadata"
+				},
+				{
+					"include": "#rests"
+				},
+				{
+					"include": "#notes"
+				},
+				{
+					"include": "#operators"
+				},
+				{
+					"include": "#references"
+				},
+				{
+					"include": "#comments"
+				}
+			]
+		},
+		"clipBlock": {
+			"begin": "\\{",
+			"end": "\\}",
+			"name": "meta.block.clip",
+			"contentName": "meta.block.clip.inner",
+			"patterns": [
+				{
+					"include": "#root"
+				},
+				{
+					"include": "#clipBlock"
+				}
+			]
+		},
+		"arrayBlock": {
+			"begin": "\\[",
+			"end": "\\]",
+			"name": "meta.block.array",
+			"contentName": "meta.block.array.inner",
+			"patterns": [
+				{
+					"include": "#root"
+				}
+			]
+		},
+		"groupBlock": {
+			"begin": "\\(",
+			"end": "\\)",
+			"name": "meta.block.group",
+			"contentName": "meta.block.group.inner",
+			"patterns": [
+				{
+					"include": "#root"
+				}
+			]
+		},
+		"comments": {
+			"name": "comment.line.double-slash",
+			"begin": "//",
+			"end": "$",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.comment"
+				}
+			}
+		},
+		"metadata": {
+			"patterns": [
+				{
+					"match": "(@)([a-zA-Z_]+)\\s*(=)\\s*([^\\s\\]\\}\\)]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control"
+						},
+						"2": {
+							"name": "keyword.control"
+						},
+						"3": {
+							"name": "keyword.operator"
+						},
+						"4": {
+							"name": "meta.object-literal.key"
+						}
+					}
+				}
+			]
+		},
+		"rests": {
+			"match": "\\b0\\b",
+			"name": "support.constant"
+		},
+		"notes": {
+			"match": "(?<![0-9])([0-7][#b+-]*)(?!\\w)",
+			"name": "meta.object-literal.key"
+		},
+		"references": {
+			"match": "(?<!@)\\b[a-zA-Z_]\\w*\\b(?!\\s*=)",
+			"name": "support.type"
+		},
+		"operators": {
+			"patterns": [
+				{
+					"match": ":",
+					"name": "keyword.control"
+				},
+				{
+					"match": ",",
+					"name": "keyword.control"
+				}
+			]
+		}
+	}
+}
