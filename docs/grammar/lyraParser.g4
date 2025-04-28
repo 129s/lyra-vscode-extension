@@ -9,17 +9,15 @@ source: content EOF;
 content: metadata* (clip | element)*;
 
 clip:
-	LBRACE metadata* content RBRACE	# BlockClip
-	| LPAREN content RPAREN			# AlignedClip
-	| LBRACK content RBRACK			# UniformClip
-	| reference						# ReferenceClip;
+	LBRACE metadata* content RBRACE		# BlockClip
+	| LPAREN alignmentExpression RPAREN	# AlignedClip
+	| LBRACK content RBRACK				# UniformClip
+	| reference							# ReferenceClip;
 
-element:
-	note_seq (COMMA)?	# NoteLine
-	| alignment			# ClipAlignment;
+element: note_seq (COMMA)? # NoteLine;
 
 note_seq: (NOTE | REST)+;
-alignment: COLON (VALUE_NUMBER | VALUE_FRACTION)?;
+alignmentExpression: content (COLON NOTE)?;
 reference: ID;
 
 metadata: METADATA ID EQUALS value;

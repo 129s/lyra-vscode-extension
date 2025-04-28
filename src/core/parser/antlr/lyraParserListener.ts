@@ -1,4 +1,4 @@
-// Generated from .\lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from ./lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
@@ -8,13 +8,12 @@ import { AlignedClipContext } from "./lyraParser";
 import { UniformClipContext } from "./lyraParser";
 import { ReferenceClipContext } from "./lyraParser";
 import { NoteLineContext } from "./lyraParser";
-import { ClipAlignmentContext } from "./lyraParser";
 import { SourceContext } from "./lyraParser";
 import { ContentContext } from "./lyraParser";
 import { ClipContext } from "./lyraParser";
 import { ElementContext } from "./lyraParser";
 import { Note_seqContext } from "./lyraParser";
-import { AlignmentContext } from "./lyraParser";
+import { AlignmentExpressionContext } from "./lyraParser";
 import { ReferenceContext } from "./lyraParser";
 import { MetadataContext } from "./lyraParser";
 import { ValueContext } from "./lyraParser";
@@ -91,19 +90,6 @@ export interface lyraParserListener extends ParseTreeListener {
 	exitNoteLine?: (ctx: NoteLineContext) => void;
 
 	/**
-	 * Enter a parse tree produced by the `ClipAlignment`
-	 * labeled alternative in `lyraParser.element`.
-	 * @param ctx the parse tree
-	 */
-	enterClipAlignment?: (ctx: ClipAlignmentContext) => void;
-	/**
-	 * Exit a parse tree produced by the `ClipAlignment`
-	 * labeled alternative in `lyraParser.element`.
-	 * @param ctx the parse tree
-	 */
-	exitClipAlignment?: (ctx: ClipAlignmentContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `lyraParser.source`.
 	 * @param ctx the parse tree
 	 */
@@ -159,15 +145,15 @@ export interface lyraParserListener extends ParseTreeListener {
 	exitNote_seq?: (ctx: Note_seqContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `lyraParser.alignment`.
+	 * Enter a parse tree produced by `lyraParser.alignmentExpression`.
 	 * @param ctx the parse tree
 	 */
-	enterAlignment?: (ctx: AlignmentContext) => void;
+	enterAlignmentExpression?: (ctx: AlignmentExpressionContext) => void;
 	/**
-	 * Exit a parse tree produced by `lyraParser.alignment`.
+	 * Exit a parse tree produced by `lyraParser.alignmentExpression`.
 	 * @param ctx the parse tree
 	 */
-	exitAlignment?: (ctx: AlignmentContext) => void;
+	exitAlignmentExpression?: (ctx: AlignmentExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `lyraParser.reference`.

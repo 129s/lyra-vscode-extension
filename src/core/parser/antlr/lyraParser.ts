@@ -1,4 +1,4 @@
-// Generated from .\lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from ./lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ATN } from "antlr4ts/atn/ATN";
@@ -50,14 +50,14 @@ export class lyraParser extends Parser {
 	public static readonly RULE_clip = 2;
 	public static readonly RULE_element = 3;
 	public static readonly RULE_note_seq = 4;
-	public static readonly RULE_alignment = 5;
+	public static readonly RULE_alignmentExpression = 5;
 	public static readonly RULE_reference = 6;
 	public static readonly RULE_metadata = 7;
 	public static readonly RULE_value = 8;
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
-		"source", "content", "clip", "element", "note_seq", "alignment", "reference", 
-		"metadata", "value",
+		"source", "content", "clip", "element", "note_seq", "alignmentExpression", 
+		"reference", "metadata", "value",
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
@@ -147,7 +147,7 @@ export class lyraParser extends Parser {
 			this.state = 31;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << lyraParser.ID) | (1 << lyraParser.REST) | (1 << lyraParser.NOTE) | (1 << lyraParser.LBRACE) | (1 << lyraParser.LPAREN) | (1 << lyraParser.LBRACK) | (1 << lyraParser.COLON))) !== 0)) {
+			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << lyraParser.ID) | (1 << lyraParser.REST) | (1 << lyraParser.NOTE) | (1 << lyraParser.LBRACE) | (1 << lyraParser.LPAREN) | (1 << lyraParser.LBRACK))) !== 0)) {
 				{
 				this.state = 29;
 				this._errHandler.sync(this);
@@ -163,7 +163,6 @@ export class lyraParser extends Parser {
 					break;
 				case lyraParser.REST:
 				case lyraParser.NOTE:
-				case lyraParser.COLON:
 					{
 					this.state = 28;
 					this.element();
@@ -237,7 +236,7 @@ export class lyraParser extends Parser {
 				this.state = 44;
 				this.match(lyraParser.LPAREN);
 				this.state = 45;
-				this.content();
+				this.alignmentExpression();
 				this.state = 46;
 				this.match(lyraParser.RPAREN);
 				}
@@ -286,38 +285,21 @@ export class lyraParser extends Parser {
 		this.enterRule(_localctx, 6, lyraParser.RULE_element);
 		let _la: number;
 		try {
-			this.state = 60;
+			_localctx = new NoteLineContext(_localctx);
+			this.enterOuterAlt(_localctx, 1);
+			{
+			this.state = 55;
+			this.note_seq();
+			this.state = 57;
 			this._errHandler.sync(this);
-			switch (this._input.LA(1)) {
-			case lyraParser.REST:
-			case lyraParser.NOTE:
-				_localctx = new NoteLineContext(_localctx);
-				this.enterOuterAlt(_localctx, 1);
+			_la = this._input.LA(1);
+			if (_la === lyraParser.COMMA) {
 				{
-				this.state = 55;
-				this.note_seq();
-				this.state = 57;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-				if (_la === lyraParser.COMMA) {
-					{
-					this.state = 56;
-					this.match(lyraParser.COMMA);
-					}
+				this.state = 56;
+				this.match(lyraParser.COMMA);
 				}
+			}
 
-				}
-				break;
-			case lyraParser.COLON:
-				_localctx = new ClipAlignmentContext(_localctx);
-				this.enterOuterAlt(_localctx, 2);
-				{
-				this.state = 59;
-				this.alignment();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 		}
 		catch (re) {
@@ -343,7 +325,7 @@ export class lyraParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 63;
+			this.state = 60;
 			this._errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -351,7 +333,7 @@ export class lyraParser extends Parser {
 				case 1:
 					{
 					{
-					this.state = 62;
+					this.state = 59;
 					_la = this._input.LA(1);
 					if (!(_la === lyraParser.REST || _la === lyraParser.NOTE)) {
 					this._errHandler.recoverInline(this);
@@ -369,9 +351,9 @@ export class lyraParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				this.state = 65;
+				this.state = 62;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 7, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 6, this._ctx);
 			} while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER);
 			}
 		}
@@ -390,32 +372,24 @@ export class lyraParser extends Parser {
 		return _localctx;
 	}
 	// @RuleVersion(0)
-	public alignment(): AlignmentContext {
-		let _localctx: AlignmentContext = new AlignmentContext(this._ctx, this.state);
-		this.enterRule(_localctx, 10, lyraParser.RULE_alignment);
+	public alignmentExpression(): AlignmentExpressionContext {
+		let _localctx: AlignmentExpressionContext = new AlignmentExpressionContext(this._ctx, this.state);
+		this.enterRule(_localctx, 10, lyraParser.RULE_alignmentExpression);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
+			this.state = 64;
+			this.content();
 			this.state = 67;
-			this.match(lyraParser.COLON);
-			this.state = 69;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			if (_la === lyraParser.VALUE_NUMBER || _la === lyraParser.VALUE_FRACTION) {
+			if (_la === lyraParser.COLON) {
 				{
-				this.state = 68;
-				_la = this._input.LA(1);
-				if (!(_la === lyraParser.VALUE_NUMBER || _la === lyraParser.VALUE_FRACTION)) {
-				this._errHandler.recoverInline(this);
-				} else {
-					if (this._input.LA(1) === Token.EOF) {
-						this.matchedEOF = true;
-					}
-
-					this._errHandler.reportMatch(this);
-					this.consume();
-				}
+				this.state = 65;
+				this.match(lyraParser.COLON);
+				this.state = 66;
+				this.match(lyraParser.NOTE);
 				}
 			}
 
@@ -442,7 +416,7 @@ export class lyraParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 71;
+			this.state = 69;
 			this.match(lyraParser.ID);
 			}
 		}
@@ -467,13 +441,13 @@ export class lyraParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 73;
+			this.state = 71;
 			this.match(lyraParser.METADATA);
-			this.state = 74;
+			this.state = 72;
 			this.match(lyraParser.ID);
-			this.state = 75;
+			this.state = 73;
 			this.match(lyraParser.EQUALS);
-			this.state = 76;
+			this.state = 74;
 			this.value();
 			}
 		}
@@ -499,7 +473,7 @@ export class lyraParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 78;
+			this.state = 76;
 			_la = this._input.LA(1);
 			if (!((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << lyraParser.VALUE_NUMBER) | (1 << lyraParser.VALUE_FRACTION) | (1 << lyraParser.VALUE_ID))) !== 0))) {
 			this._errHandler.recoverInline(this);
@@ -529,40 +503,39 @@ export class lyraParser extends Parser {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03\x15S\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03\x15Q\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x03\x02\x03\x02\x03\x02\x03\x03\x07" +
 		"\x03\x19\n\x03\f\x03\x0E\x03\x1C\v\x03\x03\x03\x03\x03\x07\x03 \n\x03" +
 		"\f\x03\x0E\x03#\v\x03\x03\x04\x03\x04\x07\x04\'\n\x04\f\x04\x0E\x04*\v" +
 		"\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03" +
 		"\x04\x03\x04\x03\x04\x03\x04\x05\x048\n\x04\x03\x05\x03\x05\x05\x05<\n" +
-		"\x05\x03\x05\x05\x05?\n\x05\x03\x06\x06\x06B\n\x06\r\x06\x0E\x06C\x03" +
-		"\x07\x03\x07\x05\x07H\n\x07\x03\b\x03\b\x03\t\x03\t\x03\t\x03\t\x03\t" +
-		"\x03\n\x03\n\x03\n\x02\x02\x02\v\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f" +
-		"\x02\x0E\x02\x10\x02\x12\x02\x02\x05\x03\x02\x04\x05\x03\x02\x12\x13\x03" +
-		"\x02\x12\x14\x02T\x02\x14\x03\x02\x02\x02\x04\x1A\x03\x02\x02\x02\x06" +
-		"7\x03\x02\x02\x02\b>\x03\x02\x02\x02\nA\x03\x02\x02\x02\fE\x03\x02\x02" +
-		"\x02\x0EI\x03\x02\x02\x02\x10K\x03\x02\x02\x02\x12P\x03\x02\x02\x02\x14" +
-		"\x15\x05\x04\x03\x02\x15\x16\x07\x02\x02\x03\x16\x03\x03\x02\x02\x02\x17" +
-		"\x19\x05\x10\t\x02\x18\x17\x03\x02\x02\x02\x19\x1C\x03\x02\x02\x02\x1A" +
-		"\x18\x03\x02\x02\x02\x1A\x1B\x03\x02\x02\x02\x1B!\x03\x02\x02\x02\x1C" +
-		"\x1A\x03\x02\x02\x02\x1D \x05\x06\x04\x02\x1E \x05\b\x05\x02\x1F\x1D\x03" +
-		"\x02\x02\x02\x1F\x1E\x03\x02\x02\x02 #\x03\x02\x02\x02!\x1F\x03\x02\x02" +
-		"\x02!\"\x03\x02\x02\x02\"\x05\x03\x02\x02\x02#!\x03\x02\x02\x02$(\x07" +
-		"\x07\x02\x02%\'\x05\x10\t\x02&%\x03\x02\x02\x02\'*\x03\x02\x02\x02(&\x03" +
-		"\x02\x02\x02()\x03\x02\x02\x02)+\x03\x02\x02\x02*(\x03\x02\x02\x02+,\x05" +
-		"\x04\x03\x02,-\x07\b\x02\x02-8\x03\x02\x02\x02./\x07\t\x02\x02/0\x05\x04" +
-		"\x03\x0201\x07\n\x02\x0218\x03\x02\x02\x0223\x07\v\x02\x0234\x05\x04\x03" +
-		"\x0245\x07\f\x02\x0258\x03\x02\x02\x0268\x05\x0E\b\x027$\x03\x02\x02\x02" +
-		"7.\x03\x02\x02\x0272\x03\x02\x02\x0276\x03\x02\x02\x028\x07\x03\x02\x02" +
-		"\x029;\x05\n\x06\x02:<\x07\x0E\x02\x02;:\x03\x02\x02\x02;<\x03\x02\x02" +
-		"\x02<?\x03\x02\x02\x02=?\x05\f\x07\x02>9\x03\x02\x02\x02>=\x03\x02\x02" +
-		"\x02?\t\x03\x02\x02\x02@B\t\x02\x02\x02A@\x03\x02\x02\x02BC\x03\x02\x02" +
-		"\x02CA\x03\x02\x02\x02CD\x03\x02\x02\x02D\v\x03\x02\x02\x02EG\x07\r\x02" +
-		"\x02FH\t\x03\x02\x02GF\x03\x02\x02\x02GH\x03\x02\x02\x02H\r\x03\x02\x02" +
-		"\x02IJ\x07\x03\x02\x02J\x0F\x03\x02\x02\x02KL\x07\x0F\x02\x02LM\x07\x03" +
-		"\x02\x02MN\x07\x06\x02\x02NO\x05\x12\n\x02O\x11\x03\x02\x02\x02PQ\t\x04" +
-		"\x02\x02Q\x13\x03\x02\x02\x02\v\x1A\x1F!(7;>CG";
+		"\x05\x03\x06\x06\x06?\n\x06\r\x06\x0E\x06@\x03\x07\x03\x07\x03\x07\x05" +
+		"\x07F\n\x07\x03\b\x03\b\x03\t\x03\t\x03\t\x03\t\x03\t\x03\n\x03\n\x03" +
+		"\n\x02\x02\x02\v\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10" +
+		"\x02\x12\x02\x02\x04\x03\x02\x04\x05\x03\x02\x12\x14\x02Q\x02\x14\x03" +
+		"\x02\x02\x02\x04\x1A\x03\x02\x02\x02\x067\x03\x02\x02\x02\b9\x03\x02\x02" +
+		"\x02\n>\x03\x02\x02\x02\fB\x03\x02\x02\x02\x0EG\x03\x02\x02\x02\x10I\x03" +
+		"\x02\x02\x02\x12N\x03\x02\x02\x02\x14\x15\x05\x04\x03\x02\x15\x16\x07" +
+		"\x02\x02\x03\x16\x03\x03\x02\x02\x02\x17\x19\x05\x10\t\x02\x18\x17\x03" +
+		"\x02\x02\x02\x19\x1C\x03\x02\x02\x02\x1A\x18\x03\x02\x02\x02\x1A\x1B\x03" +
+		"\x02\x02\x02\x1B!\x03\x02\x02\x02\x1C\x1A\x03\x02\x02\x02\x1D \x05\x06" +
+		"\x04\x02\x1E \x05\b\x05\x02\x1F\x1D\x03\x02\x02\x02\x1F\x1E\x03\x02\x02" +
+		"\x02 #\x03\x02\x02\x02!\x1F\x03\x02\x02\x02!\"\x03\x02\x02\x02\"\x05\x03" +
+		"\x02\x02\x02#!\x03\x02\x02\x02$(\x07\x07\x02\x02%\'\x05\x10\t\x02&%\x03" +
+		"\x02\x02\x02\'*\x03\x02\x02\x02(&\x03\x02\x02\x02()\x03\x02\x02\x02)+" +
+		"\x03\x02\x02\x02*(\x03\x02\x02\x02+,\x05\x04\x03\x02,-\x07\b\x02\x02-" +
+		"8\x03\x02\x02\x02./\x07\t\x02\x02/0\x05\f\x07\x0201\x07\n\x02\x0218\x03" +
+		"\x02\x02\x0223\x07\v\x02\x0234\x05\x04\x03\x0245\x07\f\x02\x0258\x03\x02" +
+		"\x02\x0268\x05\x0E\b\x027$\x03\x02\x02\x027.\x03\x02\x02\x0272\x03\x02" +
+		"\x02\x0276\x03\x02\x02\x028\x07\x03\x02\x02\x029;\x05\n\x06\x02:<\x07" +
+		"\x0E\x02\x02;:\x03\x02\x02\x02;<\x03\x02\x02\x02<\t\x03\x02\x02\x02=?" +
+		"\t\x02\x02\x02>=\x03\x02\x02\x02?@\x03\x02\x02\x02@>\x03\x02\x02\x02@" +
+		"A\x03\x02\x02\x02A\v\x03\x02\x02\x02BE\x05\x04\x03\x02CD\x07\r\x02\x02" +
+		"DF\x07\x05\x02\x02EC\x03\x02\x02\x02EF\x03\x02\x02\x02F\r\x03\x02\x02" +
+		"\x02GH\x07\x03\x02\x02H\x0F\x03\x02\x02\x02IJ\x07\x0F\x02\x02JK\x07\x03" +
+		"\x02\x02KL\x07\x06\x02\x02LM\x05\x12\n\x02M\x11\x03\x02\x02\x02NO\t\x03" +
+		"\x02\x02O\x13\x03\x02\x02\x02\n\x1A\x1F!(7;@E";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!lyraParser.__ATN) {
@@ -691,8 +664,8 @@ export class BlockClipContext extends ClipContext {
 }
 export class AlignedClipContext extends ClipContext {
 	public LPAREN(): TerminalNode { return this.getToken(lyraParser.LPAREN, 0); }
-	public content(): ContentContext {
-		return this.getRuleContext(0, ContentContext);
+	public alignmentExpression(): AlignmentExpressionContext {
+		return this.getRuleContext(0, AlignmentExpressionContext);
 	}
 	public RPAREN(): TerminalNode { return this.getToken(lyraParser.RPAREN, 0); }
 	constructor(ctx: ClipContext) {
@@ -790,27 +763,6 @@ export class NoteLineContext extends ElementContext {
 		}
 	}
 }
-export class ClipAlignmentContext extends ElementContext {
-	public alignment(): AlignmentContext {
-		return this.getRuleContext(0, AlignmentContext);
-	}
-	constructor(ctx: ElementContext) {
-		super(ctx.parent, ctx.invokingState);
-		this.copyFrom(ctx);
-	}
-	// @Override
-	public enterRule(listener: lyraParserListener): void {
-		if (listener.enterClipAlignment) {
-			listener.enterClipAlignment(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: lyraParserListener): void {
-		if (listener.exitClipAlignment) {
-			listener.exitClipAlignment(this);
-		}
-	}
-}
 
 
 export class Note_seqContext extends ParserRuleContext {
@@ -852,25 +804,27 @@ export class Note_seqContext extends ParserRuleContext {
 }
 
 
-export class AlignmentContext extends ParserRuleContext {
-	public COLON(): TerminalNode { return this.getToken(lyraParser.COLON, 0); }
-	public VALUE_NUMBER(): TerminalNode | undefined { return this.tryGetToken(lyraParser.VALUE_NUMBER, 0); }
-	public VALUE_FRACTION(): TerminalNode | undefined { return this.tryGetToken(lyraParser.VALUE_FRACTION, 0); }
+export class AlignmentExpressionContext extends ParserRuleContext {
+	public content(): ContentContext {
+		return this.getRuleContext(0, ContentContext);
+	}
+	public COLON(): TerminalNode | undefined { return this.tryGetToken(lyraParser.COLON, 0); }
+	public NOTE(): TerminalNode | undefined { return this.tryGetToken(lyraParser.NOTE, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
 	// @Override
-	public get ruleIndex(): number { return lyraParser.RULE_alignment; }
+	public get ruleIndex(): number { return lyraParser.RULE_alignmentExpression; }
 	// @Override
 	public enterRule(listener: lyraParserListener): void {
-		if (listener.enterAlignment) {
-			listener.enterAlignment(this);
+		if (listener.enterAlignmentExpression) {
+			listener.enterAlignmentExpression(this);
 		}
 	}
 	// @Override
 	public exitRule(listener: lyraParserListener): void {
-		if (listener.exitAlignment) {
-			listener.exitAlignment(this);
+		if (listener.exitAlignmentExpression) {
+			listener.exitAlignmentExpression(this);
 		}
 	}
 }

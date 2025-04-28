@@ -1,0 +1,1 @@
+antlr4ts ./lyraLexer.g4 ./lyraParser.g4 -o ../../src/core/parser/antlr
