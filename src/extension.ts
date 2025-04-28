@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { MidiPlayerManager } from './MidiPlayerManager';
+import { LyraCompiler } from './core';
 
 enum BlockType {
     Curly = '{',
@@ -16,6 +18,7 @@ interface Block {
 export function activate(context: vscode.ExtensionContext) {
     let showBlocks = false;
     let activeEditor: vscode.TextEditor | undefined;
+    const playerManager = new MidiPlayerManager();
 
     // 块装饰器（无边框纯色背景）
     const blockDecoration = vscode.window.createTextEditorDecorationType({
@@ -82,40 +85,43 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('lyra.toggleBlocks', () => {
             showBlocks = !showBlocks;
             updateDecorations();
-            // vscode.window.showInformationMessage(`块显示 ${showBlocks ? '开启' : '关闭'}`);
         }),
 
-        vscode.commands.registerCommand('lyra.playCurrentBlock', () => {
+        vscode.commands.registerCommand('lyra.playCurrentBlock', async () => {
             const block = getCurrentBlock();
-            if (block) {
+            if (!block || !activeEditor) return;
+
+            try {
                 const range = new vscode.Range(block.start, block.end);
-                const content = activeEditor!.document.getText(range);
-                vscode.window.showInformationMessage(
-                    `play:${content}\n` +
-                    `line:${block.start.line + 1}-${block.end.line + 1}`
-                );
-                // 在此处添加播放逻辑
+                const content = activeEditor.document.getText(range);
+
+                // 编译并播放
+                const midiBuffer = LyraCompiler.compile(content);
+                await playerManager.play(midiBuffer);
+
+                vscode.window.setStatusBarMessage(`Lyra: Playing block...`, 2000);
+            } catch (error) {
+                vscode.window.showErrorMessage(`Compilation failed: ${error}`);
             }
         }),
 
-        vscode.commands.registerCommand('lyra.playGlobal', () => {
+        vscode.commands.registerCommand('lyra.playGlobal', async () => {
             if (!activeEditor) return;
 
-            const blocks = parseBlocks(activeEditor.document);
-            const mainBlock = blocks.find(b => b.depth === 1);
-            if (mainBlock) {
-                const content = activeEditor.document.getText(
-                    new vscode.Range(mainBlock.start, mainBlock.end)
-                );
-                vscode.window.showInformationMessage(
-                    `play:${content}\n` +
-                    `line:${mainBlock.start.line + 1}-${mainBlock.end.line + 1}`
-                );
-            } else {
+            try {
                 const fullContent = activeEditor.document.getText();
-                vscode.window.showInformationMessage("播放整个文件");
+                const midiBuffer = LyraCompiler.compile(fullContent);
+                await playerManager.play(midiBuffer);
+
+                vscode.window.setStatusBarMessage(`Lyra: Playing entire file...`, 2000);
+            } catch (error) {
+                vscode.window.showErrorMessage(`Compilation failed: ${error}`);
             }
-            // 在此处添加播放逻辑
+        }),
+
+        vscode.commands.registerCommand('lyra.stopPlayback', () => {
+            playerManager.stop();
+            vscode.window.setStatusBarMessage(`Lyra: Playback stopped`, 2000);
         })
     );
 
