@@ -5,12 +5,11 @@ type NoteParseResult = {
     duration: number;
     velocity?: number;
 };
-
 export class NoteUtils {
-    private static readonly SCALE_DEGREES = [0, 2, 4, 5, 7, 9, 11]; // C大调音阶半音数 (C=0)
-    private static readonly BASE_OCTAVE = 4;
-    private static readonly DEFAULT_BPM = 120;
-    private static readonly WHOLE_NOTE_DURATION = (60 / this.DEFAULT_BPM) * 4;
+    public static readonly SCALE_DEGREES = [0, 2, 4, 5, 7, 9, 11]; // C大调音阶半音数 (C=0)
+    public static readonly BASE_OCTAVE = 4;
+    public static readonly DEFAULT_BPM = 120;
+    public static readonly WHOLE_NOTE_DURATION = (60 / this.DEFAULT_BPM) * 4;
 
     /**
      * 解析Lyra音符语法为MIDI参数
@@ -47,7 +46,7 @@ export class NoteUtils {
     /**
      * 根据调性计算基准音高
      */
-    private static calculateBasePitch(
+    public static calculateBasePitch(
         degree: number,
         key: string,
         octaveOffset: number
@@ -65,7 +64,7 @@ export class NoteUtils {
     /**
      * 获取调性偏移量（C=0, G=1, F=-1等）
      */
-    private static getKeyOffset(key: string): number {
+    public static getKeyOffset(key: string): number {
         const circleOfFifths: Record<string, number> = {
             C: 0, G: 1, D: 2, A: 3, E: 4, B: 5, "F#": 6,
             F: -1, Bb: -2, Eb: -3, Ab: -4, Db: -5, Gb: -6
@@ -76,7 +75,7 @@ export class NoteUtils {
     /**
      * 应用升降号
      */
-    private static applyAccidental(basePitch: number, accidental?: string): number {
+    static applyAccidental(basePitch: number, accidental?: string): number {
         switch (accidental) {
             case "#": return basePitch + 1;
             case "b": return basePitch - 1;
