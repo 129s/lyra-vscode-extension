@@ -1,54 +1,72 @@
-import { Player } from 'midi-player-js';
-import * as fs from 'fs';
-import * as path from 'path';
-import { tmpdir } from 'os';
 
+import { spawn } from 'child_process';
+import { Logger } from './core/utils/Logger';
+import { platform } from 'process';
+import * as path from 'path';
+
+interface NoteEvent {
+    type: 'noteOn' | 'noteOff';
+    note: number;
+    time: number; // 毫秒时间戳
+    duration?: number;
+}
 export enum PlayMode {
     Once,
     Loop
 }
 
 export class MidiPlayerManager {
-    private player?: Player;
-    private currentFile?: string;
-    private loopCount = 0;
+    private playerProcess?: any;
+    private eventListeners: ((event: NoteEvent) => void)[] = [];
     private isLooping = false;
 
-    async play(buffer: Buffer, loop: boolean = false) {
+    async play(buffer: Buffer) {
         this.stop();
 
-        const tempPath = path.join(tmpdir(), `lyra_${Date.now()}.mid`);
-        fs.writeFileSync(tempPath, buffer);
-        this.currentFile = tempPath;
-
-        this.player = new Player();
-        this.isLooping = loop;
-
-        this.player.on('endOfFile', () => {
-            if (this.isLooping) {
-                this.loopCount++;
-                this.player?.play();
-            }
+        // 启动播放器进程
+        const playerPath = this.getPlatformPlayer();
+        this.playerProcess = spawn(playerPath, [], {
+            stdio: ['pipe', 'ignore', 'pipe'] // MIDI数据通过stdin发送
         });
 
-        await this.player.loadFile(tempPath);
-        this.player.play();
+        // 发送MIDI数据到进程
+        this.playerProcess.stdin.write(buffer);
+
+        // 监听实时事件
+        this.playerProcess.stderr.on('data', (data: Buffer) => {
+            const event = this.parseEvent(data.toString());
+            event && this.eventListeners.forEach(cb => cb(event));
+        });
     }
 
     stop() {
         this.isLooping = false;
-        if (this.player) {
-            this.player.stop();
-            this.player = undefined;
+        if (this.playerProcess) {
+            this.playerProcess.kill();
+            this.playerProcess = undefined;
         }
-        if (this.currentFile) {
-            fs.unlinkSync(this.currentFile);
-            this.currentFile = undefined;
-        }
-        this.loopCount = 0;
+        // 发送暂停
     }
 
-    get isPlaying() {
-        return this.player?.isPlaying() ?? false;
+    addEventListener(cb: (event: NoteEvent) => void) {
+        this.eventListeners.push(cb);
+    }
+
+    private parseEvent(data: string): NoteEvent | null {
+        try {
+            return JSON.parse(data.trim());
+        } catch (e) {
+            return null;
+        }
+    }
+
+    private getPlatformPlayer(): string {
+        const binPath = path.join(__dirname, '../../bin');
+        const players = {
+            win32: path.join(binPath, 'win', 'midiplayer.exe'),
+            darwin: path.join(binPath, 'mac', 'midiplayer'),
+            linux: path.join(binPath, 'linux', 'midiplayer')
+        };
+        return players[platform as keyof typeof players];
     }
 }

@@ -13,7 +13,9 @@ import {
     NoteLine,
     Note,
     Rest,
-    ASTNode
+    ASTNode,
+    Clip,
+    Element
 } from './ASTTypes';
 import { lyraParserVisitor } from '../parser/antlr/lyraParserVisitor';
 import { ParserRuleContext } from 'antlr4ts';
@@ -63,15 +65,15 @@ export class ASTBuilder
 
     visitContent(ctx: lyraParser.ContentContext): Content {
         const metadata: Metadata[] = [];
-        const clips: any[] = [];
-        const elements: any[] = [];
+        const clips: Clip[] = [];
+        const elements: Element[] = [];
 
         ctx.children?.forEach(child => {
             const result = this.visit(child);
             if (result?.type === 'Metadata') {
                 metadata.push(result as Metadata);
-            } else if (result?.type?.endsWith('Clip')) {
-                clips.push(result);
+            } else if (result.type.endsWith('Clip')) {
+                clips.push(result as Clip);
             } else if (result?.type === 'NoteLine') {
                 elements.push(result);
             }
@@ -97,7 +99,9 @@ export class ASTBuilder
 
         // 解析冒号分隔的pre/post
         if (ctx.COLON()) {
-            const [preCtx, postCtx] = ctx.content();
+            const contents = ctx.content();
+            const preCtx = contents.length > 0 ? contents[0] : undefined;
+            const postCtx = contents.length > 1 ? contents[1] : undefined;
             pre = preCtx ? this.visit(preCtx) as Content : undefined;
             post = postCtx ? this.visit(postCtx) as Content : undefined;
         } else {

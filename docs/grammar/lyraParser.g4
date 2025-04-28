@@ -6,7 +6,7 @@ options {
 
 source: content EOF;
 
-content: metadata* (clip | element)*;
+content: (metadata* (clip | element)*)?;
 
 clip:
 	LBRACE metadata* (pre = content COLON post = content)? RBRACE	# BlockClip

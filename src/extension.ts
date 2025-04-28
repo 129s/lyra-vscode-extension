@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { MidiPlayerManager, PlayMode } from './MidiPlayerManager';
 import { LyraCompiler } from './core';
+import { Logger } from './core/utils/Logger';
 
 enum BlockType {
     Curly = '{',
@@ -14,8 +15,11 @@ interface Block {
     end: vscode.Position;
     depth: number;
 }
-
 export function activate(context: vscode.ExtensionContext) {
+    // 初始化日志模块
+    Logger.initialize(context);
+    Logger.setDebugMode(true); // 开发阶段开启debug模式
+
     let showBlocks = false;
     let activeEditor: vscode.TextEditor | undefined;
     const playerManager = new MidiPlayerManager();
@@ -89,12 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // 命令实现
-    // 注册快捷键
     context.subscriptions.push(
-        vscode.commands.registerCommand('lyra.toggleBlocks', () => {
-            vscode.commands.executeCommand('editor.action.foldAll');
-        }),
-
         vscode.commands.registerCommand('lyra.playCurrentBlock', async () => {
             await executePlay(PlayMode.Once, false);
         }),
@@ -118,28 +117,26 @@ export function activate(context: vscode.ExtensionContext) {
                 getCurrentBlockContent();
 
             if (!content) {
-                vscode.window.showWarningMessage("No valid content to play");
+                Logger.error("No valid content to play");
                 return;
             }
 
             const midiBuffer = LyraCompiler.compile(content);
 
-            await playerManager.play(midiBuffer, mode === PlayMode.Loop);
+            await playerManager.play(midiBuffer);
 
             const modeText = mode === PlayMode.Loop ? 'Looping' : 'Playing';
             const scopeText = isGlobal ? 'entire file' : 'current block';
-            vscode.window.setStatusBarMessage(`Lyra: ${modeText} ${scopeText}...`, 2000);
+            vscode.window.setStatusBarMessage(`Lyra: ${modeText} ${scopeText}...`);
         } catch (error) {
-            vscode.window.showErrorMessage(`Compilation failed: ${error}`);
+            Logger.error(`Compilation failed: ${error}`);
         }
     }
 
     // 监听光标变化
     context.subscriptions.push(
         vscode.window.onDidChangeTextEditorSelection(() => {
-            if (playerManager.isPlaying) {
-                playerManager.stop();
-            }
+            playerManager.stop();
         })
     );
 

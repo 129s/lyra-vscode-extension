@@ -1,14 +1,12 @@
-
-import { Root, BlockClip, AlignedClip, Content, Metadata } from "../ast/ASTTypes";
+import { Root, BlockClip, AlignedClip, Content, Metadata, Clip } from "../ast/ASTTypes";
+import { Logger } from "../utils/Logger";
 import { NoteUtils } from "../utils/NoteUtils";
-import { Writer } from "midi-writer-js/build/types/writer";
-import { Track } from "midi-writer-js/build/types/chunks/track";
-import { NoteEvent } from "midi-writer-js/build/types/midi-events/note-event";
+const MidiWriter = require('midi-writer-js');
+const { Writer, Track, NoteEvent } = MidiWriter;
 
 export class MidiGenerator {
     private readonly ticksPerBeat = 960;
-    private currentTicks = 0;
-    private track!: Track;
+    private track!: InstanceType<typeof Track>;
     private clipRegistry = new Map<string, any>();
 
     // 音乐参数（带作用域）
@@ -30,6 +28,8 @@ export class MidiGenerator {
     }
 
     private processContent(content: Content, startTime: number = 0): number {
+        if (!content) return startTime;
+
         let cursor = startTime;
 
         // 应用元数据作用域
@@ -52,7 +52,7 @@ export class MidiGenerator {
         return cursor;
     }
 
-    private processClip(clip: any, startTime: number): number {
+    private processClip(clip: Clip, startTime: number): number {
         switch (clip.type) {
             case 'BlockClip': return this.processBlockClip(clip, startTime);
             case 'AlignedClip': return this.processAlignedClip(clip, startTime);
@@ -104,6 +104,7 @@ export class MidiGenerator {
     }
 
     private processNoteLine(noteLine: any, startTime: number): number {
+        Logger.info('Processing NoteLine: ' + JSON.stringify(noteLine.items))
         let cursor = startTime;
 
         noteLine.items.forEach((item: any) => {
@@ -113,6 +114,7 @@ export class MidiGenerator {
 
             if (item.type === 'Note') {
                 this.addNoteEvent(item, cursor, durationTicks);
+                Logger.info(`Adding note: ${JSON.stringify(item)}, durationTicks: ${durationTicks}`);
             }
 
             cursor += durationTicks;
@@ -195,7 +197,8 @@ export class MidiGenerator {
             this.currentKey,
             this.currentOctave - 4
         );
-        return NoteUtils.applyAccidental(basePitch, note.accidental);
+        const midiPitch = NoteUtils.applyAccidental(basePitch, note.accidental);
+        return Math.min(Math.max(midiPitch, 0), 127);
     }
 
     private calculateNoteTicks(note: any): number {

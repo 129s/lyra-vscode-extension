@@ -13,12 +13,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "lyra.toggleBlocks",
-        "title": "Toggle Block Display"
-      },
-      {
         "command": "lyra.playCurrentBlock",
         "title": "Play Current Block"
+      },
+      {
+        "command": "lyra.loopCurrentBlock",
+        "title": "Loop Current Block"
       },
       {
         "command": "lyra.playGlobal",
@@ -27,18 +27,18 @@
     ],
     "keybindings": [
       {
-        "command": "lyra.toggleBlocks",
-        "key": "F4",
+        "command": "lyra.playCurrentBlock",
+        "key": "f5",
         "when": "editorTextFocus"
       },
       {
-        "command": "lyra.playCurrentBlock",
-        "key": "F5",
+        "command": "lyra.loopCurrentBlock",
+        "key": "ctrl+f5",
         "when": "editorTextFocus"
       },
       {
         "command": "lyra.playGlobal",
-        "key": "F6",
+        "key": "alt+f5",
         "when": "editorTextFocus"
       }
     ],
