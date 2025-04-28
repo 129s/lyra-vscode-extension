@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { MidiPlayerManager } from './MidiPlayerManager';
+import { MidiPlayerManager, PlayMode } from './MidiPlayerManager';
 import { LyraCompiler } from './core';
 
 enum BlockType {
@@ -80,52 +80,70 @@ export function activate(context: vscode.ExtensionContext) {
             .find(b => b.start.isBeforeOrEqual(pos) && b.end.isAfterOrEqual(pos));
     }
 
+    function getCurrentBlockContent(): string | null {
+        const block = getCurrentBlock();
+        if (!block || !activeEditor) return null;
+
+        const range = new vscode.Range(block.start, block.end);
+        return activeEditor.document.getText(range);
+    }
+
     // 命令实现
+    // 注册快捷键
     context.subscriptions.push(
         vscode.commands.registerCommand('lyra.toggleBlocks', () => {
-            showBlocks = !showBlocks;
-            updateDecorations();
+            vscode.commands.executeCommand('editor.action.foldAll');
         }),
 
         vscode.commands.registerCommand('lyra.playCurrentBlock', async () => {
-            const block = getCurrentBlock();
-            if (!block || !activeEditor) return;
+            await executePlay(PlayMode.Once, false);
+        }),
 
-            try {
-                const range = new vscode.Range(block.start, block.end);
-                const content = activeEditor.document.getText(range);
-
-                // 编译并播放
-                const midiBuffer = LyraCompiler.compile(content);
-                await playerManager.play(midiBuffer);
-
-                vscode.window.setStatusBarMessage(`Lyra: Playing block...`, 2000);
-            } catch (error) {
-                vscode.window.showErrorMessage(`Compilation failed: ${error}`);
-            }
+        vscode.commands.registerCommand('lyra.loopCurrentBlock', async () => {
+            await executePlay(PlayMode.Loop, false);
         }),
 
         vscode.commands.registerCommand('lyra.playGlobal', async () => {
-            if (!activeEditor) return;
-
-            try {
-                const fullContent = activeEditor.document.getText();
-                const midiBuffer = LyraCompiler.compile(fullContent);
-                await playerManager.play(midiBuffer);
-
-                vscode.window.setStatusBarMessage(`Lyra: Playing entire file...`, 2000);
-            } catch (error) {
-                vscode.window.showErrorMessage(`Compilation failed: ${error}`);
-            }
-        }),
-
-        vscode.commands.registerCommand('lyra.stopPlayback', () => {
-            playerManager.stop();
-            vscode.window.setStatusBarMessage(`Lyra: Playback stopped`, 2000);
+            await executePlay(PlayMode.Once, true);
         })
     );
 
-    // 编辑器事件监听
+    // 添加执行播放的公共方法
+    async function executePlay(mode: PlayMode, isGlobal: boolean) {
+        if (!activeEditor) return;
+
+        try {
+            const content = isGlobal ?
+                activeEditor.document.getText() :
+                getCurrentBlockContent();
+
+            if (!content) {
+                vscode.window.showWarningMessage("No valid content to play");
+                return;
+            }
+
+            const midiBuffer = LyraCompiler.compile(content);
+
+            await playerManager.play(midiBuffer, mode === PlayMode.Loop);
+
+            const modeText = mode === PlayMode.Loop ? 'Looping' : 'Playing';
+            const scopeText = isGlobal ? 'entire file' : 'current block';
+            vscode.window.setStatusBarMessage(`Lyra: ${modeText} ${scopeText}...`, 2000);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Compilation failed: ${error}`);
+        }
+    }
+
+    // 监听光标变化
+    context.subscriptions.push(
+        vscode.window.onDidChangeTextEditorSelection(() => {
+            if (playerManager.isPlaying) {
+                playerManager.stop();
+            }
+        })
+    );
+
+    // 监听编辑器事件
     context.subscriptions.push(
         vscode.window.onDidChangeActiveTextEditor(editor => {
             activeEditor = editor;
