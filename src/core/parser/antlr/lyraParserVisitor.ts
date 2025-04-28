@@ -1,4 +1,4 @@
-// Generated from .\lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from ./lyraParser.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
@@ -8,13 +8,11 @@ import { AlignedClipContext } from "./lyraParser";
 import { UniformClipContext } from "./lyraParser";
 import { ReferenceClipContext } from "./lyraParser";
 import { NoteLineContext } from "./lyraParser";
-import { ClipAlignmentContext } from "./lyraParser";
 import { SourceContext } from "./lyraParser";
 import { ContentContext } from "./lyraParser";
 import { ClipContext } from "./lyraParser";
 import { ElementContext } from "./lyraParser";
 import { Note_seqContext } from "./lyraParser";
-import { AlignmentContext } from "./lyraParser";
 import { ReferenceContext } from "./lyraParser";
 import { MetadataContext } from "./lyraParser";
 import { ValueContext } from "./lyraParser";
@@ -69,14 +67,6 @@ export interface lyraParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitNoteLine?: (ctx: NoteLineContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by the `ClipAlignment`
-	 * labeled alternative in `lyraParser.element`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitClipAlignment?: (ctx: ClipAlignmentContext) => Result;
-
-	/**
 	 * Visit a parse tree produced by `lyraParser.source`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -110,13 +100,6 @@ export interface lyraParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitNote_seq?: (ctx: Note_seqContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `lyraParser.alignment`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitAlignment?: (ctx: AlignmentContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `lyraParser.reference`.

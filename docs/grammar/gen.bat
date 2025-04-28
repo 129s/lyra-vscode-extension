@@ -1,1 +1,1 @@
-antlr4ts ./lyraLexer.g4 ./lyraParser.g4 -o ../../src/core/parser/antlr
+antlr4ts ./lyraLexer.g4 ./lyraParser.g4 -visitor -o ../../src/core/parser/antlr

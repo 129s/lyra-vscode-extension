@@ -65,14 +65,16 @@ export type Clip = BlockClip | AlignedClip | UniformClip | ReferenceClip;
 export interface BlockClip extends BaseNode {
     type: 'BlockClip';
     metadata: Metadata[];
-    content: Content;
+    pre?: Content;
+    post?: Content;
 }
 
 export interface AlignedClip extends BaseNode {
     type: 'AlignedClip';
-    content: Content;
-    alignPosition?: number;  // 对齐位置
+    pre?: Content;
+    post?: Content;
 }
+
 export interface UniformClip extends BaseNode {
     type: 'UniformClip';
     content: Content;
@@ -89,6 +91,7 @@ export interface Content extends BaseNode {
     metadata: Metadata[];
     clips: Clip[];
     elements: Element[];
+    alignmentBase?: number; // 对齐基准点
 }
 
 // 根节点

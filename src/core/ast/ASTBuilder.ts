@@ -16,7 +16,6 @@ import {
     ASTNode
 } from './ASTTypes';
 import { lyraParserVisitor } from '../parser/antlr/lyraParserVisitor';
-import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 import { ParserRuleContext } from 'antlr4ts';
 import { RuleNode } from 'antlr4ts/tree/RuleNode';
 
@@ -89,44 +88,44 @@ export class ASTBuilder
 
     visitBlockClip(ctx: lyraParser.BlockClipContext): BlockClip {
         const metadata: Metadata[] = [];
-        const content = this.visit(ctx.content()) as Content;
+        let pre: Content | undefined;
+        let post: Content | undefined;
 
         ctx.metadata()?.forEach(mdCtx => {
             metadata.push(this.visit(mdCtx) as Metadata);
         });
 
+        // 解析冒号分隔的pre/post
+        if (ctx.COLON()) {
+            const [preCtx, postCtx] = ctx.content();
+            pre = preCtx ? this.visit(preCtx) as Content : undefined;
+            post = postCtx ? this.visit(postCtx) as Content : undefined;
+        } else {
+            const singleContent = ctx.content(0);
+            if (singleContent) {
+                post = this.visit(singleContent) as Content;
+            }
+        }
+
         return {
             type: 'BlockClip',
             metadata,
-            content,
+            pre,
+            post,
             ...this.createBaseNode(ctx)
         };
     }
 
     visitAlignedClip(ctx: lyraParser.AlignedClipContext): AlignedClip {
-        const alignmentCtx = ctx.alignmentExpression();
-        const content = this.visit(alignmentCtx.content()) as Content;
-        const alignToken = alignmentCtx.COLON()?.symbol;
-        const alignValue = alignToken ? this.parseAlignmentValue(ctx) : undefined;
-
+        const [preCtx, postCtx] = ctx.content();
         return {
             type: 'AlignedClip',
-            content,
-            alignPosition: alignValue,
+            pre: preCtx ? this.visit(preCtx) as Content : undefined,
+            post: postCtx ? this.visit(postCtx) as Content : undefined,
             ...this.createBaseNode(ctx)
         };
     }
 
-    private parseAlignmentValue(ctx: lyraParser.AlignedClipContext): number | undefined {
-        const noteToken = ctx.alignmentExpression().NOTE();
-        if (!noteToken) return undefined;
-
-        const noteText = noteToken.text;
-        const degreeMatch = noteText.match(/^([1-7])/);
-        if (!degreeMatch) return undefined;
-
-        return parseInt(degreeMatch[1]);
-    }
 
     visitUniformClip(ctx: lyraParser.UniformClipContext): UniformClip {
         return {

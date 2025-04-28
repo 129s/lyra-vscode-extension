@@ -13,7 +13,6 @@ import { ContentContext } from "./lyraParser";
 import { ClipContext } from "./lyraParser";
 import { ElementContext } from "./lyraParser";
 import { Note_seqContext } from "./lyraParser";
-import { AlignmentExpressionContext } from "./lyraParser";
 import { ReferenceContext } from "./lyraParser";
 import { MetadataContext } from "./lyraParser";
 import { ValueContext } from "./lyraParser";
@@ -143,17 +142,6 @@ export interface lyraParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitNote_seq?: (ctx: Note_seqContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `lyraParser.alignmentExpression`.
-	 * @param ctx the parse tree
-	 */
-	enterAlignmentExpression?: (ctx: AlignmentExpressionContext) => void;
-	/**
-	 * Exit a parse tree produced by `lyraParser.alignmentExpression`.
-	 * @param ctx the parse tree
-	 */
-	exitAlignmentExpression?: (ctx: AlignmentExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `lyraParser.reference`.
